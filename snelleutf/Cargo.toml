@@ -5,6 +5,9 @@
 name = "snelleutf"
 version = "0.1.0"
 edition = "2024"
+description = "Fast Unicode operations - safe bindings to simdutf"
+keywords = ["simdutf"]
+categories = ["external-ffi-bindings"]
 authors = ["The Snelleutf Authors"]
 license = "Apache-2.0 OR MIT"
 repository = "https://codeberg.org/chaste/snelleutf"
