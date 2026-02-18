@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Snelleutf Authors
+# SPDX-License-Identifier: CC0-1.0
+
+codecov:
+  ci:
+    - ci.codeberg.org
+
+component_management:
+  individual_components:
+    - component_id: crate_snelleutf
+      name: snelleutf
+      paths:
+        - snelleutf/**
+    - component_id: crate_snelleutf-sys
+      name: snelleutf-sys
+      paths:
+        - snelleutf-sys/**
