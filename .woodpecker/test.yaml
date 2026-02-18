@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: 2026 The Chaste Authors
+# SPDX-License-Identifier: CC0-1.0
+
+when:
+  - event: pull_request
+  - event: push
+    branch: ${CI_REPO_DEFAULT_BRANCH}
+
+steps:
+  test:
+    image: codeberg.org/chaste/rust:1.93.0-alpine3.23-nextest0.9.124-tarpaulin0.35.1
+    environment:
+      CARGO_TERM_COLOR: always
+      RUSTFLAGS: "-Ctarget-feature=-crt-static"
+    commands:
+      - cargo nextest run --locked
+      - cargo test --locked --doc
+      - cargo tarpaulin --engine llvm --out xml --locked
+
+  codecov:
+    image: woodpeckerci/plugin-codecov
+    settings:
+      files:
+        - cobertura.xml
+      token:
+        from_secret: codecov_token
