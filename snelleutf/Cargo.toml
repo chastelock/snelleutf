@@ -5,6 +5,9 @@
 name = "snelleutf"
 version = "0.1.0"
 edition = "2024"
+authors = ["The Snelleutf Authors"]
+license = "Apache-2.0 OR MIT"
+repository = "https://codeberg.org/chaste/snelleutf"
 
 [features]
 default = ["std"]
