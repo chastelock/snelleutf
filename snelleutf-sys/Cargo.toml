@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 The Snelleutf Authors
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+
+[package]
+name = "snelleutf-sys"
+version = "0.1.0"
+edition = "2024"
+links = "simdutf"
+
+[dependencies]
+
+[build-dependencies]
+bindgen.workspace = true
+pkg-config.workspace = true

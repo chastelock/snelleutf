@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 The Snelleutf Authors
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+
+[package]
+name = "snelleutf"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = ["std"]
+
+std = []
+
+[dependencies]
+snelleutf-sys.workspace = true

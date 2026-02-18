@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 The Snelleutf Authors
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+
+[workspace]
+resolver = "2"
+members = ["snelleutf", "snelleutf-sys"]
+
+[workspace.dependencies]
+snelleutf-sys = { path = "snelleutf-sys" }
+
+bindgen = "0.72"
+pkg-config = "0.3"
