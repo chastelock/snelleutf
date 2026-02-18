@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Snelleutf Authors
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+
+[submodule "snelleutf-src/simdutf"]
+	path = snelleutf-src/simdutf
+	url = https://github.com/simdutf/simdutf.git

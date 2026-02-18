@@ -16,6 +16,7 @@ repository = "https://codeberg.org/chaste/snelleutf"
 default = ["std"]
 
 std = []
+static-link = ["snelleutf-sys/static-link"]
 
 [dependencies]
 snelleutf-sys.workspace = true

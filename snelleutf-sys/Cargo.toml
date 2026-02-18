@@ -13,8 +13,16 @@ authors = ["The Snelleutf Authors"]
 license = "Apache-2.0 OR MIT"
 repository = "https://codeberg.org/chaste/snelleutf"
 
+[features]
+default = []
+static-link = ["dep:snelleutf-src"]
+
 [dependencies]
 
 [build-dependencies]
 bindgen.workspace = true
 pkg-config.workspace = true
+
+[build-dependencies.snelleutf-src]
+workspace = true
+optional = true

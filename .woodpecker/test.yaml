@@ -8,8 +8,8 @@ when:
 
 matrix:
   feature_flags:
-    - ''
-    - '--no-default-features'
+    - '--features static-link'
+    - '--no-default-features --features static-link'
 
 steps:
   test:

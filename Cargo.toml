@@ -3,10 +3,12 @@
 
 [workspace]
 resolver = "2"
-members = ["snelleutf", "snelleutf-sys"]
+members = ["snelleutf", "snelleutf-src", "snelleutf-sys"]
 
 [workspace.dependencies]
+snelleutf-src = { version = "0.1.0+8.0.0", path = "snelleutf-src" }
 snelleutf-sys = { version = "0.1.0", path = "snelleutf-sys" }
 
 bindgen = "0.72"
+cc = "1.2"
 pkg-config = "0.3"

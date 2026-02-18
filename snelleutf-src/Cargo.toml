@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Snelleutf Authors
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+
+[package]
+name = "snelleutf-src"
+version = "0.1.0+8.0.0"
+edition = "2024"
+description = "simdutf source code"
+keywords = ["simdutf"]
+authors = ["The Snelleutf Authors", "The simdutf authors"]
+license = "Apache-2.0 OR MIT"
+repository = "https://codeberg.org/chaste/snelleutf"
+exclude = ["/simdutf/"]
+
+[dependencies]
+cc.workspace = true
