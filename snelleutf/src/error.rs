@@ -13,7 +13,7 @@ pub struct SnelError {
 pub(crate) type Result<T, E = SnelError> = core::result::Result<T, E>;
 
 impl fmt::Display for SnelError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "SnelError({:?} at char {})", self.code, self.count)
     }
 }
