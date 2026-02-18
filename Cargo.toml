@@ -6,7 +6,7 @@ resolver = "2"
 members = ["snelleutf", "snelleutf-sys"]
 
 [workspace.dependencies]
-snelleutf-sys = { path = "snelleutf-sys" }
+snelleutf-sys = { version = "0.1.0", path = "snelleutf-sys" }
 
 bindgen = "0.72"
 pkg-config = "0.3"
