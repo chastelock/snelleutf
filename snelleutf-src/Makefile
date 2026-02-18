@@ -3,4 +3,4 @@
 
 amalgamate:
 	python3 simdutf/singleheader/amalgamate.py --no-zip --no-readme --output-dir simdutf/build
-	cp simdutf/build/simdutf.cpp simdutf/build/simdutf_c.h src/
+	cp simdutf/build/simdutf.cpp simdutf/build/simdutf.h simdutf/build/simdutf_c.h src/

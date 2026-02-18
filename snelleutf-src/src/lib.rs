@@ -18,6 +18,7 @@ pub fn build() -> Artefacts {
     let out_dir = Path::new(&env::var_os("OUT_DIR").unwrap()).join("simdutf");
     cc::Build::new()
         .file(src_dir.join(CPP_AMALGAM))
+        .include(&src_dir)
         .cpp(true)
         .flag("-std=c++17")
         .out_dir(&out_dir)
