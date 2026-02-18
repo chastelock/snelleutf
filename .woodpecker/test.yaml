@@ -6,16 +6,22 @@ when:
   - event: push
     branch: ${CI_REPO_DEFAULT_BRANCH}
 
+matrix:
+  feature_flags:
+    - ''
+    - '--no-default-features'
+
 steps:
   test:
     image: codeberg.org/chaste/rust:1.93.0-alpine3.23-nextest0.9.124-tarpaulin0.35.1
     environment:
       CARGO_TERM_COLOR: always
       RUSTFLAGS: "-Ctarget-feature=-crt-static"
+      feature_flags: ${feature_flags}
     commands:
-      - cargo nextest run --locked
-      - cargo test --locked --doc
-      - cargo tarpaulin --engine llvm --out xml --locked
+      - cargo nextest run --locked $feature_flags
+      - cargo test --locked --doc $feature_flags
+      - cargo tarpaulin --engine llvm --out xml --locked $feature_flags
 
   codecov:
     image: woodpeckerci/plugin-codecov
