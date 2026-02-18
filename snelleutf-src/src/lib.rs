@@ -19,6 +19,7 @@ pub fn build() -> Artefacts {
     cc::Build::new()
         .file(src_dir.join(CPP_AMALGAM))
         .cpp(true)
+        .flag("-std=c++17")
         .out_dir(&out_dir)
         .compile("simdutf");
     let c_header = out_dir.join(C_HEADER);
