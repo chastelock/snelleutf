@@ -8,7 +8,9 @@ when:
 
 matrix:
   feature_flags:
+    # All include static-link because Alpine 3.23 has simdutf <8
     - '--features static-link'
+    - '--no-default-features --features alloc,static-link'
     - '--no-default-features --features static-link'
 
 steps:
