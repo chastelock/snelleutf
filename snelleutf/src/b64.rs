@@ -9,7 +9,11 @@ use core::ffi::c_char;
 
 use snelleutf_sys::*;
 
-pub use snelleutf_sys::simdutf_base64_options as B64Options;
+pub use snelleutf_sys::{
+    simdutf_base64_options as B64Options, simdutf_last_chunk_handling_options as LastChunkOptions,
+};
+
+use crate::error::*;
 
 /// Expected length of base64 encoding from specified byte length
 pub fn len_from_bytes(input_len: usize, options: B64Options) -> usize {
@@ -60,6 +64,62 @@ pub fn from_bytes(input: &[u8], options: B64Options) -> String {
     output
 }
 
+/// Highest possible binary length when decoded from Base64
+pub fn max_len_to_bytes<I>(input: I) -> usize
+where
+    I: AsRef<[u8]>,
+{
+    let input_ = input.as_ref();
+    unsafe {
+        simdutf_maximal_binary_length_from_base64(input_.as_ptr() as *const c_char, input_.len())
+    }
+}
+
+pub fn to_bytes_add_into_vec(
+    input: &[u8],
+    options: B64Options,
+    last_chunk_options: LastChunkOptions,
+    output: &mut Vec<u8>,
+) -> Result<()> {
+    let capacity = max_len_to_bytes(input);
+    output.reserve_exact(capacity);
+    unsafe {
+        let length = conv_error(simdutf_base64_to_binary(
+            input.as_ptr() as *const c_char,
+            input.len(),
+            output.as_mut_ptr() as *mut c_char,
+            options,
+            last_chunk_options,
+        ))?;
+        assert!(capacity >= length);
+        output.set_len(length);
+    }
+    Ok(())
+}
+
+/// Decode a Base64 string into [Vec<u8>].
+///
+/// ```
+/// # use snelleutf::b64::{to_bytes, B64Options, LastChunkOptions};
+/// assert_eq!(
+///     to_bytes(
+///         "AAAAACAB".as_bytes(),
+///         B64Options::SIMDUTF_BASE64_DEFAULT,
+///         LastChunkOptions::SIMDUTF_LAST_CHUNK_LOOSE,
+///     ).unwrap(),
+///     [0, 0, 0, 0, 32, 1],
+/// );
+/// ```
+pub fn to_bytes(
+    input: &[u8],
+    options: B64Options,
+    last_chunk_options: LastChunkOptions,
+) -> Result<Vec<u8>> {
+    let mut output = Vec::new();
+    to_bytes_add_into_vec(input, options, last_chunk_options, &mut output)?;
+    Ok(output)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -74,6 +134,19 @@ mod tests {
         assert_eq!(
             from_bytes(&BYTES, B64Options::SIMDUTF_BASE64_URL),
             "bWlhdXc"
+        );
+    }
+
+    #[test]
+    fn decode() {
+        assert_eq!(
+            to_bytes(
+                b"bWlhdXc=",
+                B64Options::SIMDUTF_BASE64_DEFAULT,
+                LastChunkOptions::SIMDUTF_LAST_CHUNK_LOOSE
+            )
+            .unwrap(),
+            b"miauw",
         );
     }
 }
