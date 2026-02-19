@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2026 The Snelleutf Authors
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
+use core::ffi::c_char;
+
 use snelleutf_sys::*;
 
 pub fn count_utf8(input: &[u8]) -> usize {
-    unsafe { simdutf_count_utf8(input.as_ptr() as *const i8, input.len()) }
+    unsafe { simdutf_count_utf8(input.as_ptr() as *const c_char, input.len()) }
 }
 pub fn count_str(input: &str) -> usize {
     count_utf8(input.as_bytes())

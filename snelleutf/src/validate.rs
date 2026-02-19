@@ -1,15 +1,19 @@
 // SPDX-FileCopyrightText: 2026 The Snelleutf Authors
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
+use core::ffi::c_char;
+
 use snelleutf_sys::*;
 
 use crate::error::*;
 
 pub fn validate_utf8(buf: &[u8]) -> bool {
-    unsafe { simdutf_validate_utf8(buf.as_ptr() as *const i8, buf.len()) }
+    unsafe { simdutf_validate_utf8(buf.as_ptr() as *const c_char, buf.len()) }
 }
 pub fn validate_utf8_with_errors(buf: &[u8]) -> Result<usize> {
-    conv_error(unsafe { simdutf_validate_utf8_with_errors(buf.as_ptr() as *const i8, buf.len()) })
+    conv_error(unsafe {
+        simdutf_validate_utf8_with_errors(buf.as_ptr() as *const c_char, buf.len())
+    })
 }
 pub fn validate_utf8_as_str<'a>(buf: &'a [u8]) -> Result<&'a str> {
     match validate_utf8_with_errors(buf) {
