@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Snelleutf Authors
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+
+snelleutf-src/src/simdutf.cpp   binary
+snelleutf-src/src/simdutf.h     binary
+snelleutf-src/src/simdutf_c.h   binary
