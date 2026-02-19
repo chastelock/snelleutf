@@ -19,9 +19,9 @@ impl fmt::Display for SnelError {
 }
 impl error::Error for SnelError {}
 
-pub(crate) fn conv_error(result: simdutf_result) -> Result<()> {
+pub(crate) fn conv_error(result: simdutf_result) -> Result<usize> {
     match result.error {
-        simdutf_error_code::SIMDUTF_ERROR_SUCCESS => Ok(()),
+        simdutf_error_code::SIMDUTF_ERROR_SUCCESS => Ok(result.count),
         code @ _ => Err(SnelError {
             code,
             count: result.count,

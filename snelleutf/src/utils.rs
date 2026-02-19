@@ -17,7 +17,7 @@ where
     let mut buf = Vec::new();
     file.read_to_end(&mut buf)?;
     match crate::validate::validate_utf8_with_errors(&buf) {
-        Ok(()) => Ok(unsafe { String::from_utf8_unchecked(buf) }),
+        Ok(_) => Ok(unsafe { String::from_utf8_unchecked(buf) }),
         Err(e) => Err(io::Error::new(io::ErrorKind::InvalidData, e)),
     }
 }

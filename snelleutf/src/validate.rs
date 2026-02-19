@@ -8,12 +8,12 @@ use crate::error::*;
 pub fn validate_utf8(buf: &[u8]) -> bool {
     unsafe { simdutf_validate_utf8(buf.as_ptr() as *const i8, buf.len()) }
 }
-pub fn validate_utf8_with_errors(buf: &[u8]) -> Result<()> {
+pub fn validate_utf8_with_errors(buf: &[u8]) -> Result<usize> {
     conv_error(unsafe { simdutf_validate_utf8_with_errors(buf.as_ptr() as *const i8, buf.len()) })
 }
 pub fn validate_utf8_as_str<'a>(buf: &'a [u8]) -> Result<&'a str> {
     match validate_utf8_with_errors(buf) {
-        Ok(()) => Ok(unsafe { str::from_utf8_unchecked(buf) }),
+        Ok(_) => Ok(unsafe { str::from_utf8_unchecked(buf) }),
         Err(e) => Err(e),
     }
 }
@@ -21,7 +21,7 @@ pub fn validate_utf8_as_str<'a>(buf: &'a [u8]) -> Result<&'a str> {
 pub fn validate_utf32(buf: &[u32]) -> bool {
     unsafe { simdutf_validate_utf32(buf.as_ptr(), buf.len()) }
 }
-pub fn validate_utf32_with_errors(buf: &[u32]) -> Result<()> {
+pub fn validate_utf32_with_errors(buf: &[u32]) -> Result<usize> {
     conv_error(unsafe { simdutf_validate_utf32_with_errors(buf.as_ptr(), buf.len()) })
 }
 
@@ -41,7 +41,7 @@ valid_utf16!(validate_utf16le_as_ascii, simdutf_validate_utf16le_as_ascii);
 
 macro_rules! valid_utf16_err {
     ($our_fn:ident, $their_fn:ident) => {
-        pub fn $our_fn(buf: &[u16]) -> Result<()> {
+        pub fn $our_fn(buf: &[u16]) -> Result<usize> {
             conv_error(unsafe { $their_fn(buf.as_ptr(), buf.len()) })
         }
     };
