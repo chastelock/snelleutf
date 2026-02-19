@@ -2,7 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
 use std::path::{Path, PathBuf};
+use std::sync::LazyLock;
 use std::{env, fs};
+
+/// Version of simdutf provided in this package.
+pub const SIMDUTF_VERSION: LazyLock<&str> =
+    LazyLock::new(|| env!("CARGO_PKG_VERSION").split_once("+").unwrap().1);
 
 pub struct Artefacts {
     pub ar: PathBuf,

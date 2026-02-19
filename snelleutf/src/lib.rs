@@ -10,3 +10,5 @@ pub mod count;
 pub mod error;
 pub mod utils;
 pub mod validate;
+
+pub use snelleutf_sys::SIMDUTF_VERSION;

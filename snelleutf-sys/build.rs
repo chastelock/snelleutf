@@ -9,6 +9,8 @@ fn find_by_pkgconf() -> Result<path::PathBuf, pkg_config::Error> {
         .atleast_version("8.0.0")
         .probe("simdutf")?;
 
+    println!("cargo:rustc-env=SIMDUTF_VERSION={}", &lib.version);
+
     Ok(lib
         .include_paths
         .iter()
@@ -19,6 +21,10 @@ fn find_by_pkgconf() -> Result<path::PathBuf, pkg_config::Error> {
 #[cfg(feature = "static-link")]
 fn build_from_source() -> path::PathBuf {
     let artefacts = snelleutf_src::build();
+    println!(
+        "cargo:rustc-env=SIMDUTF_VERSION={}",
+        *snelleutf_src::SIMDUTF_VERSION
+    );
     println!("cargo:rustc-link-search={}", artefacts.ar.display());
     artefacts.c_header
 }
