@@ -15,7 +15,8 @@ repository = "https://codeberg.org/chaste/snelleutf"
 [features]
 default = ["std"]
 
-std = []
+std = ["alloc"]
+alloc = []
 static-link = ["snelleutf-sys/static-link"]
 
 [dependencies]
