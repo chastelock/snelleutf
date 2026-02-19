@@ -11,6 +11,10 @@ component_management:
       name: snelleutf
       paths:
         - snelleutf/**
+    - component_id: crate_snelleutf-src
+      name: snelleutf-src
+      paths:
+        - snelleutf-src/**
     - component_id: crate_snelleutf-sys
       name: snelleutf-sys
       paths:
