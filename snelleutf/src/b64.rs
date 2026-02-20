@@ -27,12 +27,12 @@ pub fn len_from_bytes(input_len: usize, options: B64Options) -> usize {
 pub fn from_bytes_add_to_vec(input: &[u8], options: B64Options, output: &mut Vec<u8>) {
     let added_capacity = len_from_bytes(input.len(), options);
     let original_len = output.len();
-    output.reserve_exact(original_len + added_capacity);
+    output.reserve_exact(added_capacity);
     unsafe {
         let added_length = simdutf_binary_to_base64(
             input.as_ptr() as *const c_char,
             input.len(),
-            output.as_mut_ptr() as *mut c_char,
+            (output.as_mut_ptr() as *mut c_char).wrapping_add(original_len),
             options,
         );
         debug_assert!(added_capacity >= added_length);
@@ -82,17 +82,18 @@ pub fn to_bytes_add_into_vec(
     output: &mut Vec<u8>,
 ) -> Result<()> {
     let capacity = max_len_to_bytes(input);
+    let original_len = output.len();
     output.reserve_exact(capacity);
     unsafe {
-        let length = conv_error(simdutf_base64_to_binary(
+        let added_length = conv_error(simdutf_base64_to_binary(
             input.as_ptr() as *const c_char,
             input.len(),
-            output.as_mut_ptr() as *mut c_char,
+            (output.as_mut_ptr() as *mut c_char).wrapping_add(original_len),
             options,
             last_chunk_options,
         ))?;
-        assert!(capacity >= length);
-        output.set_len(length);
+        assert!(capacity >= added_length);
+        output.set_len(original_len + added_length);
     }
     Ok(())
 }
@@ -135,6 +136,9 @@ mod tests {
             from_bytes(&BYTES, B64Options::SIMDUTF_BASE64_URL),
             "bWlhdXc"
         );
+        let mut prefixed = "prefix-preexisting-in-the-string-".to_string();
+        from_bytes_add_to_string(&BYTES, B64Options::SIMDUTF_BASE64_DEFAULT, &mut prefixed);
+        assert_eq!(prefixed, "prefix-preexisting-in-the-string-bWlhdXc=");
     }
 
     #[test]
@@ -148,5 +152,14 @@ mod tests {
             .unwrap(),
             b"miauw",
         );
+        let mut prefixed = b"prefix-preexisting-in-the-vec-".to_vec();
+        to_bytes_add_into_vec(
+            b"bWlhdXc=",
+            B64Options::SIMDUTF_BASE64_DEFAULT,
+            LastChunkOptions::SIMDUTF_LAST_CHUNK_LOOSE,
+            &mut prefixed,
+        )
+        .unwrap();
+        assert_eq!(prefixed, b"prefix-preexisting-in-the-vec-miauw");
     }
 }
