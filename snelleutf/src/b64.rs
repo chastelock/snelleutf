@@ -124,6 +124,7 @@ pub fn to_bytes(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::string::ToString as _;
 
     #[test]
     fn encode() {
