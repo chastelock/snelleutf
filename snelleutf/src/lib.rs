@@ -7,6 +7,7 @@ extern crate alloc;
 
 pub mod b64;
 pub mod count;
+pub mod detect;
 pub mod error;
 pub mod utils;
 pub mod validate;
