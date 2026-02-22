@@ -7,14 +7,52 @@ use snelleutf_sys::*;
 
 use crate::error::*;
 
+/// Check if the input is valid UTF-8, return bool with the answer.
+///
+/// ```
+/// # use snelleutf::validate::validate_utf8;
+/// assert_eq!(validate_utf8(b"Ich muss lecker Kaffee trinken"), true);
+///
+/// // This is a CP1252 character, not UTF-8!
+/// assert_eq!(validate_utf8(b"\x806,70, alsjeblieft"), false);
+/// ```
 pub fn validate_utf8(buf: &[u8]) -> bool {
     unsafe { simdutf_validate_utf8(buf.as_ptr() as *const c_char, buf.len()) }
 }
+/// Check if the input is valid UTF-8, return its length or a [SnelError].
+///
+/// ```
+/// # use snelleutf::error::SimdutfError;
+/// # use snelleutf::validate::validate_utf8_with_errors;
+/// assert_eq!(validate_utf8_with_errors(b"Ich muss lecker Kaffee trinken"), Ok(30));
+///
+/// // This is a CP1252 character, not UTF-8!
+/// let cp1252_error = validate_utf8_with_errors(b"Voor \x806,70").unwrap_err();
+/// assert_eq!(cp1252_error.code, SimdutfError::SIMDUTF_ERROR_TOO_LONG);
+/// // 5 bytes parsed successfully, error at byte 5.
+/// assert_eq!(cp1252_error.count, 5);
+/// ```
 pub fn validate_utf8_with_errors(buf: &[u8]) -> Result<usize> {
     conv_error(unsafe {
         simdutf_validate_utf8_with_errors(buf.as_ptr() as *const c_char, buf.len())
     })
 }
+/// Check if the input bytes are valid UTF-8, return them back as [str], or an error.
+///
+/// ```
+/// # use snelleutf::error::SimdutfError;
+/// # use snelleutf::validate::validate_utf8_as_str;
+/// assert_eq!(validate_utf8_as_str(
+///     b"\xc3\x9cbercoole \xc3\xa4cc\xc3\xa8nts, na\xc3\xafve houding en clich\xc3\xa9matige fr\xc3\xb4lerie"),
+///     Ok("Übercoole äccènts, naïve houding en clichématige frôlerie"),
+/// );
+///
+/// // This is a CP1252 character, not UTF-8!
+/// let cp1252_error = validate_utf8_as_str(b"Voor \x806,70").unwrap_err();
+/// assert_eq!(cp1252_error.code, SimdutfError::SIMDUTF_ERROR_TOO_LONG);
+/// // 5 bytes parsed successfully, error at byte 5.
+/// assert_eq!(cp1252_error.count, 5);
+/// ```
 pub fn validate_utf8_as_str<'a>(buf: &'a [u8]) -> Result<&'a str> {
     match validate_utf8_with_errors(buf) {
         Ok(_) => Ok(unsafe { str::from_utf8_unchecked(buf) }),
@@ -22,9 +60,29 @@ pub fn validate_utf8_as_str<'a>(buf: &'a [u8]) -> Result<&'a str> {
     }
 }
 
+/// Check if the input is valid UTF-32, return a bool with the answer.
+///
+/// ```
+/// # use snelleutf::error::SimdutfError;
+/// # use snelleutf::validate::validate_utf32;
+/// assert!(validate_utf32(
+///     // スポットレイト
+///     &[255, 254, 0, 0, 185, 48, 0, 0, 221, 48, 0, 0, 195, 48, 0, 0, 200, 48, 0, 0, 236, 48, 0, 0, 164, 48, 0, 0, 200, 48, 0, 0]
+/// ));
+/// ```
 pub fn validate_utf32(buf: &[u32]) -> bool {
     unsafe { simdutf_validate_utf32(buf.as_ptr(), buf.len()) }
 }
+/// Check if the input is valid UTF-32, return its length, or an error.
+///
+/// ```
+/// # use snelleutf::error::SimdutfError;
+/// # use snelleutf::validate::validate_utf32_with_errors;
+/// assert_eq!(validate_utf32_with_errors(
+///     // スポットレイト
+///     &[65279, 12473, 12509, 12483, 12488, 12524, 12452, 12488]
+/// ), Ok(8));
+/// ```
 pub fn validate_utf32_with_errors(buf: &[u32]) -> Result<usize> {
     conv_error(unsafe { simdutf_validate_utf32_with_errors(buf.as_ptr(), buf.len()) })
 }

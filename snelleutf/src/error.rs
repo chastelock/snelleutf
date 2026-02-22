@@ -5,6 +5,8 @@ use core::{error, fmt};
 
 use snelleutf_sys::*;
 
+pub use snelleutf_sys::simdutf_error_code as SimdutfError;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SnelError {
     pub code: simdutf_error_code,

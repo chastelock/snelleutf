@@ -16,6 +16,12 @@ pub use snelleutf_sys::{
 use crate::error::*;
 
 /// Expected length of base64 encoding from specified byte length
+///
+/// ```
+/// # use snelleutf::b64::{len_from_bytes, B64Options};
+/// assert_eq!(len_from_bytes(8, B64Options::SIMDUTF_BASE64_DEFAULT), 12);
+/// assert_eq!(len_from_bytes(8, B64Options::SIMDUTF_BASE64_URL), 11);
+/// ```
 pub fn len_from_bytes(input_len: usize, options: B64Options) -> usize {
     unsafe { simdutf_base64_length_from_binary(input_len, options) }
 }
@@ -44,6 +50,20 @@ pub fn from_bytes_add_to_vec(input: &[u8], options: B64Options, output: &mut Vec
 ///
 /// To add the output to a [Vec<u8>], see [from_bytes_add_to_vec].
 /// To receive a [String] output, see [from_bytes].
+///
+/// ```
+/// const LEN: usize = 33;
+/// let mut sri = String::with_capacity(LEN);
+/// sri += "sha1-";
+/// snelleutf::b64::from_bytes_add_to_string(
+///     &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+///     snelleutf::b64::B64Options::SIMDUTF_BASE64_DEFAULT,
+///     &mut sri,
+/// );
+/// assert_eq!(sri, "sha1-AQIDBAUGBwgJCgsMDQ4PEBESExQ=");
+/// assert_eq!(sri.len(), LEN);
+/// assert_eq!(sri.capacity(), LEN);
+/// ```
 pub fn from_bytes_add_to_string(input: &[u8], options: B64Options, output: &mut String) {
     from_bytes_add_to_vec(input, options, unsafe { output.as_mut_vec() });
 }
