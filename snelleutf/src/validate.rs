@@ -67,7 +67,7 @@ pub fn validate_utf8_as_str<'a>(buf: &'a [u8]) -> Result<&'a str> {
 /// # use snelleutf::validate::validate_utf32;
 /// assert!(validate_utf32(
 ///     // スポットレイト
-///     &[255, 254, 0, 0, 185, 48, 0, 0, 221, 48, 0, 0, 195, 48, 0, 0, 200, 48, 0, 0, 236, 48, 0, 0, 164, 48, 0, 0, 200, 48, 0, 0]
+///     &[65279, 12473, 12509, 12483, 12488, 12524, 12452, 12488]
 /// ));
 /// ```
 pub fn validate_utf32(buf: &[u32]) -> bool {
