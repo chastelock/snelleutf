@@ -33,17 +33,23 @@ pub fn utf8_to_latin1_len(input: &[u8]) -> usize {
 pub fn utf8_to_latin1_append_to_vec(input: &[u8], output: &mut Vec<u8>) -> Result<()> {
     let added_len = utf8_to_latin1_len(input);
     output.reserve_exact(added_len);
-    let new_len = output.len() + added_len;
     unsafe {
-        let real_added_len = conv_error(simdutf_convert_utf8_to_latin1_with_errors(
+        match conv_error(simdutf_convert_utf8_to_latin1_with_errors(
             input.as_ptr() as *const c_char,
             input.len(),
             (output.as_mut_ptr() as *mut c_char).wrapping_add(output.len()),
-        ))?;
-        output.set_len(new_len);
-        debug_assert_eq!(real_added_len, added_len);
+        )) {
+            Ok(real_added_len) => {
+                output.set_len(output.len() + real_added_len);
+                debug_assert_eq!(real_added_len, added_len);
+                Ok(())
+            }
+            Err(e) => {
+                output.set_len(output.len() + e.count);
+                Err(e)
+            }
+        }
     }
-    Ok(())
 }
 #[cfg(feature = "alloc")]
 pub fn utf8_to_latin1(input: &[u8]) -> Result<Vec<u8>> {
@@ -70,17 +76,23 @@ pub fn utf16_to_latin1_len(input_len: usize) -> usize {
 pub fn utf16_to_latin1_append_to_vec(input: &[u16], output: &mut Vec<u8>) -> Result<()> {
     let added_len = utf16_to_latin1_len(input.len());
     output.reserve_exact(added_len);
-    let new_len = output.len() + added_len;
     unsafe {
-        let real_added_len = conv_error(simdutf_convert_utf16_to_latin1_with_errors(
+        match conv_error(simdutf_convert_utf16_to_latin1_with_errors(
             input.as_ptr(),
             input.len(),
             (output.as_mut_ptr() as *mut c_char).wrapping_add(output.len()),
-        ))?;
-        output.set_len(new_len);
-        debug_assert_eq!(real_added_len, added_len);
+        )) {
+            Ok(real_added_len) => {
+                output.set_len(output.len() + real_added_len);
+                debug_assert_eq!(real_added_len, added_len);
+                Ok(())
+            }
+            Err(e) => {
+                output.set_len(output.len() + e.count);
+                Err(e)
+            }
+        }
     }
-    Ok(())
 }
 #[cfg(feature = "alloc")]
 pub fn utf16_to_latin1(input: &[u16]) -> Result<Vec<u8>> {
@@ -107,17 +119,23 @@ pub fn utf32_to_latin1_len(input_len: usize) -> usize {
 pub fn utf32_to_latin1_append_to_vec(input: &[u32], output: &mut Vec<u8>) -> Result<()> {
     let added_len = utf32_to_latin1_len(input.len());
     output.reserve_exact(added_len);
-    let new_len = output.len() + added_len;
     unsafe {
-        let real_added_len = conv_error(simdutf_convert_utf32_to_latin1_with_errors(
+        match conv_error(simdutf_convert_utf32_to_latin1_with_errors(
             input.as_ptr(),
             input.len(),
             (output.as_mut_ptr() as *mut c_char).wrapping_add(output.len()),
-        ))?;
-        output.set_len(new_len);
-        debug_assert_eq!(real_added_len, added_len);
+        )) {
+            Ok(real_added_len) => {
+                output.set_len(output.len() + real_added_len);
+                debug_assert_eq!(real_added_len, added_len);
+                Ok(())
+            }
+            Err(e) => {
+                output.set_len(output.len() + e.count);
+                Err(e)
+            }
+        }
     }
-    Ok(())
 }
 #[cfg(feature = "alloc")]
 pub fn utf32_to_latin1(input: &[u32]) -> Result<Vec<u8>> {
@@ -148,17 +166,23 @@ pub fn utf16le_to_utf8_len(input: &[u16]) -> usize {
 pub fn utf16le_to_utf8_append_to_vec(input: &[u16], output: &mut Vec<u8>) -> Result<()> {
     let added_len = utf16le_to_utf8_len(input);
     output.reserve_exact(added_len);
-    let new_len = output.len() + added_len;
     unsafe {
-        let real_added_len = conv_error(simdutf_convert_utf16le_to_utf8_with_errors(
+        match conv_error(simdutf_convert_utf16le_to_utf8_with_errors(
             input.as_ptr(),
             input.len(),
             (output.as_mut_ptr() as *mut c_char).wrapping_add(output.len()),
-        ))?;
-        output.set_len(new_len);
-        debug_assert_eq!(real_added_len, added_len);
+        )) {
+            Ok(real_added_len) => {
+                output.set_len(output.len() + real_added_len);
+                debug_assert_eq!(real_added_len, added_len);
+                Ok(())
+            }
+            Err(e) => {
+                output.set_len(output.len() + e.count);
+                Err(e)
+            }
+        }
     }
-    Ok(())
 }
 #[cfg(feature = "alloc")]
 pub fn utf16le_to_utf8_append_to_string(input: &[u16], output: &mut String) -> Result<()> {
@@ -196,17 +220,23 @@ pub fn utf16be_to_utf8_len(input: &[u16]) -> usize {
 pub fn utf16be_to_utf8_append_to_vec(input: &[u16], output: &mut Vec<u8>) -> Result<()> {
     let added_len = utf16be_to_utf8_len(input);
     output.reserve_exact(added_len);
-    let new_len = output.len() + added_len;
     unsafe {
-        let real_added_len = conv_error(simdutf_convert_utf16be_to_utf8_with_errors(
+        match conv_error(simdutf_convert_utf16be_to_utf8_with_errors(
             input.as_ptr(),
             input.len(),
             (output.as_mut_ptr() as *mut c_char).wrapping_add(output.len()),
-        ))?;
-        output.set_len(new_len);
-        debug_assert_eq!(real_added_len, added_len);
+        )) {
+            Ok(real_added_len) => {
+                output.set_len(output.len() + real_added_len);
+                debug_assert_eq!(real_added_len, added_len);
+                Ok(())
+            }
+            Err(e) => {
+                output.set_len(output.len() + e.count);
+                Err(e)
+            }
+        }
     }
-    Ok(())
 }
 #[cfg(feature = "alloc")]
 pub fn utf16be_to_utf8_append_to_string(input: &[u16], output: &mut String) -> Result<()> {
@@ -246,17 +276,23 @@ pub fn utf8_to_utf16_len(input: &[u8]) -> usize {
 pub fn utf8_to_utf16_append_to_vec(input: &[u8], output: &mut Vec<u16>) -> Result<()> {
     let added_len = utf8_to_utf16_len(input);
     output.reserve_exact(added_len);
-    let new_len = output.len() + added_len;
     unsafe {
-        let real_added_len = conv_error(simdutf_convert_utf8_to_utf16_with_errors(
+        match conv_error(simdutf_convert_utf8_to_utf16_with_errors(
             input.as_ptr() as *const c_char,
             input.len(),
             output.as_mut_ptr().wrapping_add(output.len()),
-        ))?;
-        output.set_len(new_len);
-        debug_assert_eq!(real_added_len, added_len);
+        )) {
+            Ok(real_added_len) => {
+                output.set_len(output.len() + real_added_len);
+                debug_assert_eq!(real_added_len, added_len);
+                Ok(())
+            }
+            Err(e) => {
+                output.set_len(output.len() + e.count);
+                Err(e)
+            }
+        }
     }
-    Ok(())
 }
 #[cfg(feature = "alloc")]
 pub fn utf8_to_utf16(input: &[u8]) -> Result<Vec<u16>> {
@@ -285,21 +321,47 @@ pub fn utf8_to_utf32_len(input: &[u8]) -> usize {
 pub fn utf8_to_utf32_append_to_vec(input: &[u8], output: &mut Vec<u32>) -> Result<()> {
     let added_len = utf8_to_utf32_len(input);
     output.reserve_exact(added_len);
-    let new_len = output.len() + added_len;
     unsafe {
-        let real_added_len = conv_error(simdutf_convert_utf8_to_utf32_with_errors(
+        match conv_error(simdutf_convert_utf8_to_utf32_with_errors(
             input.as_ptr() as *const c_char,
             input.len(),
             output.as_mut_ptr().wrapping_add(output.len()),
-        ))?;
-        output.set_len(new_len);
-        debug_assert_eq!(real_added_len, added_len);
+        )) {
+            Ok(real_added_len) => {
+                output.set_len(output.len() + real_added_len);
+                debug_assert_eq!(real_added_len, added_len);
+                Ok(())
+            }
+            Err(e) => {
+                output.set_len(output.len() + e.count);
+                Err(e)
+            }
+        }
     }
-    Ok(())
 }
 #[cfg(feature = "alloc")]
 pub fn utf8_to_utf32(input: &[u8]) -> Result<Vec<u32>> {
     let mut output = Vec::new();
     utf8_to_utf32_append_to_vec(input, &mut output)?;
     Ok(output)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[cfg(feature = "alloc")]
+    fn unsuccessful_append() {
+        let mut output = b"Computer says: ".to_vec();
+        // These quotemarks inside don't exist in Latin-1.
+        let err = utf8_to_latin1_append_to_vec(
+            "Naïef met z’n ‘crème brûlée’-vibes".as_bytes(),
+            &mut output,
+        )
+        .unwrap_err();
+        assert_eq!(err.count, "Naïef met z".len());
+        assert_eq!(err.code, SimdutfError::SIMDUTF_ERROR_TOO_LARGE);
+        assert_eq!(output, b"Computer says: Na\xefef met z\0");
+    }
 }
