@@ -45,7 +45,9 @@ pub fn utf8_to_latin1_append_to_vec(input: &[u8], output: &mut Vec<u8>) -> Resul
                 Ok(())
             }
             Err(e) => {
-                output.set_len(output.len() + e.count);
+                if e.count > 0 {
+                    output.set_len(output.len() + e.count - 1);
+                }
                 Err(e)
             }
         }
@@ -88,7 +90,9 @@ pub fn utf16_to_latin1_append_to_vec(input: &[u16], output: &mut Vec<u8>) -> Res
                 Ok(())
             }
             Err(e) => {
-                output.set_len(output.len() + e.count);
+                if e.count > 0 {
+                    output.set_len(output.len() + e.count - 1);
+                }
                 Err(e)
             }
         }
@@ -131,7 +135,9 @@ pub fn utf32_to_latin1_append_to_vec(input: &[u32], output: &mut Vec<u8>) -> Res
                 Ok(())
             }
             Err(e) => {
-                output.set_len(output.len() + e.count);
+                if e.count > 0 {
+                    output.set_len(output.len() + e.count - 1);
+                }
                 Err(e)
             }
         }
@@ -178,7 +184,9 @@ pub fn utf16le_to_utf8_append_to_vec(input: &[u16], output: &mut Vec<u8>) -> Res
                 Ok(())
             }
             Err(e) => {
-                output.set_len(output.len() + e.count);
+                if e.count > 0 {
+                    output.set_len(output.len() + e.count - 1);
+                }
                 Err(e)
             }
         }
@@ -232,7 +240,9 @@ pub fn utf16be_to_utf8_append_to_vec(input: &[u16], output: &mut Vec<u8>) -> Res
                 Ok(())
             }
             Err(e) => {
-                output.set_len(output.len() + e.count);
+                if e.count > 0 {
+                    output.set_len(output.len() + e.count - 1);
+                }
                 Err(e)
             }
         }
@@ -288,7 +298,9 @@ pub fn utf8_to_utf16_append_to_vec(input: &[u8], output: &mut Vec<u16>) -> Resul
                 Ok(())
             }
             Err(e) => {
-                output.set_len(output.len() + e.count);
+                if e.count > 0 {
+                    output.set_len(output.len() + e.count - 1);
+                }
                 Err(e)
             }
         }
@@ -333,7 +345,9 @@ pub fn utf8_to_utf32_append_to_vec(input: &[u8], output: &mut Vec<u32>) -> Resul
                 Ok(())
             }
             Err(e) => {
-                output.set_len(output.len() + e.count);
+                if e.count > 0 {
+                    output.set_len(output.len() + e.count - 1);
+                }
                 Err(e)
             }
         }
@@ -362,6 +376,6 @@ mod tests {
         .unwrap_err();
         assert_eq!(err.count, "Naïef met z".len());
         assert_eq!(err.code, SimdutfError::SIMDUTF_ERROR_TOO_LARGE);
-        assert_eq!(output, b"Computer says: Na\xefef met z\0");
+        assert_eq!(output, b"Computer says: Na\xefef met z");
     }
 }
