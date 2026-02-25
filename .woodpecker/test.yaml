@@ -23,7 +23,8 @@ steps:
     commands:
       - cargo nextest run --locked $feature_flags
       - cargo test --locked --doc $feature_flags
-      - cargo tarpaulin --engine llvm --out xml --locked $feature_flags
+      # RUSTC_BOOTSTRAP needed for doctest coverage
+      - RUSTC_BOOTSTRAP=1 cargo tarpaulin --engine llvm --out xml --locked $feature_flags --lib --doc
 
   codecov:
     image: woodpeckerci/plugin-codecov
